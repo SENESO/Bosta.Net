@@ -9,6 +9,7 @@
     <AssemblyName>Bosta.Net</AssemblyName>
     <Description>.NET SDK for the Bosta shipping API — create and track deliveries, manage pickups, COD, AWB printing, and more.</Description>
     <PackageId>Bosta.Net</PackageId>
+    <PackageIcon>icon.png</PackageIcon>
     <Authors>SENESO</Authors>
     <Company>SENESO</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -19,7 +20,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,4 +33,7 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\docs\icon.png" Pack="true" PackagePath="icon.png" />
+  </ItemGroup>
 </Project>
