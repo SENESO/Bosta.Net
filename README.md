@@ -1,3 +1,5 @@
+![Bosta.Net](docs/banner.webp)
+
 <div align="center">
 
 # Bosta.Net
