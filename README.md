@@ -70,6 +70,19 @@ foreach (var e in shipment.History)
 await client.Deliveries.TerminateAsync("12345678");
 ```
 
+## Update a delivery
+
+Only the receiver details, drop-off address, COD and notes can change after Bosta confirms a delivery:
+
+```csharp
+var updated = await client.Deliveries.UpdateAsync("12345678", new UpdateDeliveryRequest
+{
+    Receiver = new Receiver { Phone = "01009998888" },
+    Cod = 300,
+    Notes = "Leave with the concierge"
+});
+```
+
 ## Cities, zones & districts
 
 ```csharp
@@ -162,7 +175,7 @@ catch (BostaApiException ex)
 
 | Area | Methods |
 |---|---|
-| Deliveries | Create, bulk create, get/track, search, terminate, print AWB |
+| Deliveries | Create, bulk create, get/track, search, update, terminate, print AWB |
 | Pickups | List, get, create, update, delete, available dates |
 | Geo | Cities, zones, districts |
 | Pickup locations | List, get |

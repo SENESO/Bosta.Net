@@ -244,6 +244,31 @@ namespace Bosta.Net.Models
     }
 
     /// <summary>
+    /// Request to update a delivery after Bosta confirms it.
+    /// Only a subset of fields is editable — receiver details, drop-off address,
+    /// COD and notes. Everything else is ignored by the API.
+    /// </summary>
+    public class UpdateDeliveryRequest
+    {
+        [JsonPropertyName("receiver")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public Receiver Receiver { get; set; }
+
+        [JsonPropertyName("dropOffAddress")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public DeliveryAddress DropOffAddress { get; set; }
+
+        /// <summary>Cash amount to collect on delivery (EGP).</summary>
+        [JsonPropertyName("cod")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public decimal? Cod { get; set; }
+
+        [JsonPropertyName("notes")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Notes { get; set; }
+    }
+
+    /// <summary>
     /// Request to print airway bills.
     /// </summary>
     public class PrintAwbRequest
@@ -252,8 +277,8 @@ namespace Bosta.Net.Models
         [JsonPropertyName("trackingNumbers")]
         public string TrackingNumbers { get; set; }
 
-        /// <summary>Print size: "A4" or "A6".</summary>
-        [JsonPropertyName("size")]
+        /// <summary>Print size: "A4" or "A6" (sent as <c>requestedAwbType</c> per the Bosta API).</summary>
+        [JsonPropertyName("requestedAwbType")]
         public string Size { get; set; } = AwbSizes.A4;
 
         /// <summary>Language: "ar" or "en".</summary>

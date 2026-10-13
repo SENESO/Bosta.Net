@@ -249,6 +249,50 @@ namespace Bosta.Net.Tests
         }
 
         [Fact]
+        public async Task UpdateDelivery_SendsPut_ToBusinessEndpoint()
+        {
+            var handler = new MockHttpMessageHandler(_ => MockHttpMessageHandler.Json(
+                "{\"success\":true,\"message\":\"ok\",\"data\":{\"_id\":\"abc123\",\"trackingNumber\":\"12345678\",\"type\":10}}"));
+            var client = CreateClient(handler);
+
+            var delivery = await client.Deliveries.UpdateAsync("12345678", new UpdateDeliveryRequest
+            {
+                Receiver = new Receiver { Phone = "01009998888" },
+                Cod = 300,
+                Notes = "Updated notes"
+            });
+
+            Assert.Equal("12345678", delivery.TrackingNumber);
+            Assert.Equal(HttpMethod.Put, handler.LastRequest.Method);
+            Assert.EndsWith("deliveries/business/12345678", handler.LastRequest.RequestUri.ToString());
+            Assert.Contains("\"receiver\":{\"phone\":\"01009998888\"}", handler.LastRequestBody);
+            Assert.Contains("\"cod\":300", handler.LastRequestBody);
+            Assert.Contains("\"notes\":\"Updated notes\"", handler.LastRequestBody);
+            // Null fields are omitted, not sent as nulls
+            Assert.DoesNotContain("dropOffAddress", handler.LastRequestBody);
+        }
+
+        [Fact]
+        public async Task PrintAwb_SendsRequestedAwbType_FieldName()
+        {
+            var handler = new MockHttpMessageHandler(_ => MockHttpMessageHandler.Json(
+                "{\"success\":true,\"message\":\"ok\",\"data\":{\"awb\":\"base64pdf...\"}}"));
+            var client = CreateClient(handler);
+
+            await client.Deliveries.PrintAwbAsync(new PrintAwbRequest
+            {
+                TrackingNumbers = "111,222",
+                Size = AwbSizes.A6,
+                Language = "en"
+            });
+
+            // Bosta's mass-awb endpoint expects "requestedAwbType", not "size".
+            Assert.Contains("\"requestedAwbType\":\"A6\"", handler.LastRequestBody);
+            Assert.Contains("\"lang\":\"en\"", handler.LastRequestBody);
+            Assert.DoesNotContain("\"size\"", handler.LastRequestBody);
+        }
+
+        [Fact]
         public void WebhookValidator_AcceptsMatchingSecrets()
         {
             Assert.True(BostaWebhookValidator.IsValid("s3cr3t", "s3cr3t"));

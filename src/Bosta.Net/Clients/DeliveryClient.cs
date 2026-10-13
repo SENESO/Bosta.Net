@@ -62,6 +62,19 @@ namespace Bosta.Net.Clients
         }
 
         /// <summary>
+        /// Updates a delivery by tracking number — only receiver details, drop-off
+        /// address, COD and notes are editable after Bosta confirms the delivery.
+        /// </summary>
+        /// <param name="trackingNumber">The delivery's tracking number.</param>
+        /// <param name="request">The fields to update (null fields are left unchanged).</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The updated delivery.</returns>
+        public Task<Delivery> UpdateAsync(string trackingNumber, UpdateDeliveryRequest request, CancellationToken cancellationToken = default)
+        {
+            return _http.PutAsync<Delivery>("deliveries/business/" + trackingNumber, request, cancellationToken);
+        }
+
+        /// <summary>
         /// Creates multiple deliveries in one call.
         /// </summary>
         public Task<List<CreateDeliveryResponse>> CreateBulkAsync(List<CreateDeliveryRequest> requests, CancellationToken cancellationToken = default)
